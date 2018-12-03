@@ -8,6 +8,8 @@ const configStore = () => {
     store.dispatch = addLoggintoDispatch(store);
   }
 
+  store.dispatch = addPromiseSupportToDispatch(store);
+
   return store;
 };
 
@@ -29,6 +31,15 @@ const addLoggintoDispatch = store => {
   };
 };
 
+const addPromiseSupportToDispatch = store => {
+  const rowDispatch = store.dispatch;
+  return action => {
+    if (typeof action.then === 'function') {
+      return action.then(rowDispatch);
+    }
+    return rowDispatch;
+  };
+};
 export default configStore;
 
 /*

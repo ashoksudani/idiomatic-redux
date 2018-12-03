@@ -1,12 +1,20 @@
 import * as actnTypes from 'constants/actions';
 import nanoid from 'nanoid';
 
-export const receiveTodos = (filter, response) => {
+import * as api from 'api';
+
+const receiveTodos = (filter, response) => {
   return {
     type: actnTypes.ACTN_RECEIVE_TODOS,
     filter,
     response
   };
+};
+
+export const fetchTodos = filter => {
+  return api
+    .fetchTodos(filter)
+    .then(response => receiveTodos(filter, response));
 };
 
 export const addTodo = text => {
