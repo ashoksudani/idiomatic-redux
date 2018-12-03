@@ -35,7 +35,6 @@ const getAllTodos = state => state.allIds.map(id => state.byId[id]);
 
 const getVisibleTodos = (todos, filter) => {
   const allTodos = getAllTodos(todos);
-  filter = filter || 'all';
   switch (filter) {
     case 'all':
       return allTodos;

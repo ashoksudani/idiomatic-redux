@@ -5,9 +5,6 @@ import { BrowserRouter, Route } from 'react-router-dom';
 
 import App from 'components/app';
 
-import { fetchTodos } from 'api';
-fetchTodos('all').then(console.log);
-
 const root = () => {
   return (
     <Provider store={configSotre()}>
