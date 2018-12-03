@@ -1,10 +1,10 @@
 import React from 'react';
 import Todo from 'components/todo';
 
-const TodoList = ({ todos, onTodoClick }) => (
+const TodoList = ({ todos, togggleTodo }) => (
   <ul>
     {todos.map(todo => (
-      <Todo key={todo.id} {...todo} onClick={e => onTodoClick(todo.id)} />
+      <Todo key={todo.id} {...todo} onClick={e => togggleTodo(todo.id)} />
     ))}
   </ul>
 );
