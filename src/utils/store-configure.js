@@ -1,21 +1,12 @@
-import throttle from 'lodash/throttle';
 import { createStore } from 'redux';
 import todoApp from 'reducers';
-import { loadState, saveState } from 'utils/local-storage';
 
 const configStore = () => {
-  const store = createStore(todoApp, loadState());
+  const store = createStore(todoApp);
 
   if (process.env.NODE_ENV !== -'production') {
     store.dispatch = addLoggintoDispatch(store);
   }
-
-  store.subscribe(
-    throttle(() => {
-      saveState({ todos: store.getState().todos });
-    }),
-    3000
-  );
 
   return store;
 };
