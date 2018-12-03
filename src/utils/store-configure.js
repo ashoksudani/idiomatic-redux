@@ -1,45 +1,54 @@
 import { createStore } from 'redux';
 import todoApp from 'reducers';
 
-const configStore = () => {
-  const store = createStore(todoApp);
-
-  if (process.env.NODE_ENV !== -'production') {
-    store.dispatch = addLoggintoDispatch(store);
-  }
-
-  store.dispatch = addPromiseSupportToDispatch(store);
-
-  return store;
-};
-
-const addLoggintoDispatch = store => {
-  const rawDispatch = store.dispatch;
-
+const logDispatch = store => nextDispatch => {
   if (!console.group) {
-    return rawDispatch;
+    return nextDispatch;
   }
 
   return action => {
     console.group(action.type);
     console.log('%c prev state', 'color: gray', store.getState());
     console.log('%c action', 'color: blue', action);
-    const returnValue = rawDispatch(action);
+    const returnValue = nextDispatch(action);
     console.log('%c next state', 'color: green', store.getState());
     console.groupEnd(action.type);
     return returnValue;
   };
 };
 
-const addPromiseSupportToDispatch = store => {
-  const rowDispatch = store.dispatch;
-  return action => {
-    if (typeof action.then === 'function') {
-      return action.then(rowDispatch);
-    }
-    return rowDispatch;
-  };
+const promiseDispatch = store => nextDispatch => action => {
+  if (typeof action.then === 'function') {
+    return action.then(nextDispatch);
+  }
+  return nextDispatch(action);
 };
+
+const wrapMiddlewareToDispatch = (store, middleware) => {
+  /*
+  middleware.forEach(middlewareItem => {
+    store.dispatch = middlewareItem(store)(store.dispatch);
+  });
+  */
+  //But actually it suggests that middleware should be applied from end : LIFO
+  middleware.reverse().forEach(middlewareItem => {
+    store.dispatch = middlewareItem(store)(store.dispatch);
+  });
+};
+
+const configStore = () => {
+  const store = createStore(todoApp);
+  const middleware = [promiseDispatch];
+
+  if (process.env.NODE_ENV !== -'production') {
+    middleware.push(logDispatch);
+  }
+
+  wrapMiddlewareToDispatch(store, middleware);
+
+  return store;
+};
+
 export default configStore;
 
 /*
