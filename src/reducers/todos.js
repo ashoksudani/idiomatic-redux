@@ -1,50 +1,70 @@
 import { combineReducers } from 'redux';
 
-import { ACTN_ADD_TODO } from 'constants/actions';
-import { ACTN_TOGGLE_TODO } from 'constants/actions';
-import todo from './todo';
+import { ACTN_RECEIVE_TODOS } from 'constants/actions';
 
 const byId = (state = {}, action = {}) => {
   switch (action.type) {
-    case ACTN_ADD_TODO:
-    case ACTN_TOGGLE_TODO:
-      return {
-        ...state,
-        [action.id]: todo(state[action.id], action)
-      };
+    case ACTN_RECEIVE_TODOS:
+      const nextState = { ...state };
+      action.response.forEach(todo => {
+        nextState[todo.id] = todo;
+      });
+      return nextState;
     default:
       return state;
   }
 };
 
-const allIds = (state = [], action) => {
+const all = (state = [], action) => {
+  if (action.filter !== 'all') {
+    return state;
+  }
   switch (action.type) {
-    case ACTN_ADD_TODO:
-      return [...state, action.id];
+    case ACTN_RECEIVE_TODOS:
+      return action.response.map(todo => todo.id);
     default:
       return state;
   }
 };
+
+const active = (state = [], action) => {
+  if (action.filter !== 'active') {
+    return state;
+  }
+  switch (action.type) {
+    case ACTN_RECEIVE_TODOS:
+      return action.response.map(todo => todo.id);
+    default:
+      return state;
+  }
+};
+
+const completed = (state = [], action) => {
+  if (action.filter !== 'completed') {
+    return state;
+  }
+  switch (action.type) {
+    case ACTN_RECEIVE_TODOS:
+      return action.response.map(todo => todo.id);
+    default:
+      return state;
+  }
+};
+
+const idsByFilter = combineReducers({
+  all,
+  active,
+  completed
+});
 
 const todos = combineReducers({
   byId,
-  allIds
+  idsByFilter
 });
 
-const getAllTodos = state => state.allIds.map(id => state.byId[id]);
-
-const getVisibleTodos = (todos, filter) => {
-  const allTodos = getAllTodos(todos);
-  switch (filter) {
-    case 'all':
-      return allTodos;
-    case 'completed':
-      return allTodos.filter(t => t.completed);
-    case 'active':
-      return allTodos.filter(t => !t.completed);
-    default:
-      throw new Error(`Unknown filter: ` + filter);
-  }
+const getVisibleTodos = (state, filter) => {
+  const ids = state.idsByFilter[filter];
+  return ids.map(id => state.byId[id]);
 };
 
 export default todos;
