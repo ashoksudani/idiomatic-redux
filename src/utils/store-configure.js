@@ -1,5 +1,21 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import reduxLogger from 'redux-logger';
+import reduxPromise from 'redux-promise';
 import todoApp from 'reducers';
+
+const configStore = () => {
+  const middleware = [reduxPromise];
+
+  if (process.env.NODE_ENV !== -'production') {
+    middleware.push(reduxLogger);
+  }
+
+  return createStore(todoApp, applyMiddleware(...middleware));
+};
+
+export default configStore;
+
+/*
 
 const logDispatch = store => nextDispatch => {
   if (!console.group) {
@@ -24,32 +40,7 @@ const promiseDispatch = store => nextDispatch => action => {
   return nextDispatch(action);
 };
 
-const wrapMiddlewareToDispatch = (store, middleware) => {
-  /*
-  middleware.forEach(middlewareItem => {
-    store.dispatch = middlewareItem(store)(store.dispatch);
-  });
-  */
-  //But actually it suggests that middleware should be applied from end : LIFO
-  middleware.reverse().forEach(middlewareItem => {
-    store.dispatch = middlewareItem(store)(store.dispatch);
-  });
-};
-
-const configStore = () => {
-  const store = createStore(todoApp);
-  const middleware = [promiseDispatch];
-
-  if (process.env.NODE_ENV !== -'production') {
-    middleware.push(logDispatch);
-  }
-
-  wrapMiddlewareToDispatch(store, middleware);
-
-  return store;
-};
-
-export default configStore;
+*/
 
 /*
 
