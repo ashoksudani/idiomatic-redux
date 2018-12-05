@@ -21,8 +21,7 @@ const receiveTodos = (filter, response) => {
 
 export const fetchTodos = filter => (dispatch, getState) => {
   if (getFetching(getState(), filter)) {
-    console.log('..aborting race condition');
-    return;
+    return Promise.resolve();
   }
 
   dispatch(requestTodos(filter));
