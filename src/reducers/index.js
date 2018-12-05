@@ -1,6 +1,6 @@
-import { combineReducers } from 'redux';
 import byId, { getTodo } from './by-id';
-import createList, { getIds } from './create-list';
+import { combineReducers } from 'redux';
+import createList, { getIds, getIsFetching } from './create-list';
 
 const idsByFilter = combineReducers({
   all: createList('all'),
@@ -18,5 +18,9 @@ const getVisibleTodos = (state, filter) => {
   return ids.map(id => getTodo(state.byId, id));
 };
 
+const getFetching = (state, filter) => {
+  return getIsFetching(state.idsByFilter[filter]);
+};
+
 export default todos;
-export { getVisibleTodos };
+export { getVisibleTodos, getFetching };

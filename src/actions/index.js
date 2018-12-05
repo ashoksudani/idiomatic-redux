@@ -3,6 +3,13 @@ import nanoid from 'nanoid';
 
 import * as api from 'api';
 
+export const requestTodos = (filter, response) => {
+  return {
+    type: actnTypes.ACTN_REQUEST_TODOS,
+    filter
+  };
+};
+
 const receiveTodos = (filter, response) => {
   return {
     type: actnTypes.ACTN_RECEIVE_TODOS,
