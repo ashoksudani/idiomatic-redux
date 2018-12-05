@@ -2,8 +2,9 @@ import * as actnTypes from 'constants/actions';
 import nanoid from 'nanoid';
 
 import * as api from 'api';
+import { getFetching } from 'reducers';
 
-export const requestTodos = (filter, response) => {
+const requestTodos = filter => {
   return {
     type: actnTypes.ACTN_REQUEST_TODOS,
     filter
@@ -18,10 +19,17 @@ const receiveTodos = (filter, response) => {
   };
 };
 
-export const fetchTodos = filter => {
+export const fetchTodos = filter => (dispatch, getState) => {
+  if (getFetching(getState(), filter)) {
+    console.log('..aborting race condition');
+    return;
+  }
+
+  dispatch(requestTodos(filter));
+
   return api
     .fetchTodos(filter)
-    .then(response => receiveTodos(filter, response));
+    .then(response => dispatch(receiveTodos(filter, response)));
 };
 
 export const addTodo = text => {

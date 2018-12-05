@@ -1,10 +1,20 @@
 import { createStore, applyMiddleware } from 'redux';
 import reduxLogger from 'redux-logger';
-import reduxPromise from 'redux-promise';
+// import reduxPromise from 'redux-promise';
 import todoApp from 'reducers';
 
+/* will be called e.g. 
+  store.dipsatch = thunk(store)(store.dispatch);
+  store.dispatch(action);
+*/
+
+const thunk = store => next => action =>
+  typeof action === 'function'
+    ? action(store.dispatch, store.getState)
+    : next(action);
+
 const configStore = () => {
-  const middleware = [reduxPromise];
+  const middleware = [thunk];
 
   if (process.env.NODE_ENV !== -'production') {
     middleware.push(reduxLogger);
