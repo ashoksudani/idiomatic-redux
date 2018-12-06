@@ -1,6 +1,10 @@
 import byId, { getTodo } from './by-id';
 import { combineReducers } from 'redux';
-import createList, { getIds, getIsFetching } from './create-list';
+import createList, {
+  getIds,
+  getIsFetching as getIsFetchingForState,
+  getErrorMessage as getErrorMessageForState
+} from './create-list';
 
 const idsByFilter = combineReducers({
   all: createList('all'),
@@ -18,9 +22,13 @@ const getVisibleTodos = (state, filter) => {
   return ids.map(id => getTodo(state.byId, id));
 };
 
-const getFetching = (state, filter) => {
-  return getIsFetching(state.idsByFilter[filter]);
+const getIsFetching = (state, filter) => {
+  return getIsFetchingForState(state.idsByFilter[filter]);
+};
+
+const getErrorMessage = (state, filter) => {
+  return getErrorMessageForState(state.idsByFilter[filter]);
 };
 
 export default todos;
-export { getVisibleTodos, getFetching };
+export { getVisibleTodos, getIsFetching, getErrorMessage };

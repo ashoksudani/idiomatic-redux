@@ -32,6 +32,9 @@ const delay = ms =>
 
 export const fetchTodos = filter => {
   return delay(2000).then(() => {
+    if (Math.random() > 0.5) {
+      throw new Error('Server is not available.');
+    }
     switch (filter) {
       case 'all':
         return fakeDatabase.todos;

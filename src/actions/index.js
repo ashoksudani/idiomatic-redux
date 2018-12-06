@@ -2,25 +2,32 @@ import * as actnTypes from 'constants/actions';
 import nanoid from 'nanoid';
 
 import * as api from 'api';
-import { getFetching } from 'reducers';
+import { getIsFetching } from 'reducers';
 
 const requestTodos = filter => {
   return {
-    type: actnTypes.ACTN_REQUEST_TODOS,
+    type: actnTypes.ACTN_FETCH_TODOS_REQUEST,
     filter
   };
 };
 
-const receiveTodos = (filter, response) => {
+const fetchTodosSuccess = (filter, response) => {
   return {
-    type: actnTypes.ACTN_RECEIVE_TODOS,
+    type: actnTypes.ACTN_FETCH_TODOS_SUCCESS,
     filter,
     response
   };
 };
 
+const fetchTodosFailure = (filter, error) => {
+  return {
+    type: actnTypes.ACTN_FETCH_TODOS_FAILURE,
+    filter,
+    message: error.messsage || 'Something went wrong'
+  };
+};
 export const fetchTodos = filter => (dispatch, getState) => {
-  if (getFetching(getState(), filter)) {
+  if (getIsFetching(getState(), filter)) {
     return Promise.resolve();
   }
 
@@ -28,7 +35,10 @@ export const fetchTodos = filter => (dispatch, getState) => {
 
   return api
     .fetchTodos(filter)
-    .then(response => dispatch(receiveTodos(filter, response)));
+    .then(
+      response => dispatch(fetchTodosSuccess(filter, response)),
+      error => dispatch(fetchTodosFailure(filter, error))
+    );
 };
 
 export const addTodo = text => {

@@ -1,8 +1,8 @@
-import { ACTN_RECEIVE_TODOS } from 'constants/actions';
+import { ACTN_FETCH_TODOS_SUCCESS } from 'constants/actions';
 
 const byId = (state = {}, action = {}) => {
   switch (action.type) {
-    case ACTN_RECEIVE_TODOS:
+    case ACTN_FETCH_TODOS_SUCCESS:
       const nextState = { ...state };
       action.response.forEach(todo => {
         nextState[todo.id] = todo;
