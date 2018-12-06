@@ -5,11 +5,11 @@ const createList = filter => {
   const ids = (state = [], action) => {
     switch (action.type) {
       case ACTIONS.ACTN_FETCH_TODOS_SUCCESS:
-        return action.filter !== filter
-          ? state
-          : action.response.map(todo => todo.id);
+        return action.filter !== filter ? state : action.response.result;
       case ACTIONS.ACTN_ADD_TODO_SUCCESS:
-        return filter !== 'completed' ? [...state, action.response.id] : state;
+        return filter !== 'completed'
+          ? [...state, action.response.result]
+          : state;
       default:
         return state;
     }

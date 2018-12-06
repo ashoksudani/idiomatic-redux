@@ -6,6 +6,18 @@ import {
 const byId = (state = {}, action = {}) => {
   switch (action.type) {
     case ACTN_FETCH_TODOS_SUCCESS:
+    case ACTN_ADD_TODO_SUCCESS:
+      return { ...state, ...action.response.entities.todos };
+    default:
+      return state;
+  }
+};
+
+/*
+//Without normalizr
+const byId = (state = {}, action = {}) => {
+  switch (action.type) {
+    case ACTN_FETCH_TODOS_SUCCESS:
       const nextState = { ...state };
       action.response.forEach(todo => {
         nextState[todo.id] = todo;
@@ -20,6 +32,7 @@ const byId = (state = {}, action = {}) => {
       return state;
   }
 };
+*/
 
 export default byId;
 

@@ -1,7 +1,9 @@
 import * as actnTypes from 'constants/actions';
+import { normalize } from 'normalizr';
 
 import * as api from 'api';
 import { getIsFetching } from 'reducers';
+import * as schema from './schema';
 
 const requestTodos = filter => {
   return {
@@ -32,21 +34,21 @@ export const fetchTodos = filter => (dispatch, getState) => {
 
   dispatch(requestTodos(filter));
 
-  return api
-    .fetchTodos(filter)
-    .then(
-      response => dispatch(fetchTodosSuccess(filter, response)),
-      error => dispatch(fetchTodosFailure(filter, error))
-    );
+  return api.fetchTodos(filter).then(
+    response => {
+      dispatch(fetchTodosSuccess(filter, normalize(response, schema.todos)));
+    },
+    error => dispatch(fetchTodosFailure(filter, error))
+  );
 };
 
 export const addTodo = text => dispatch => {
-  return api.addTodo(text).then(response =>
+  return api.addTodo(text).then(response => {
     dispatch({
       type: actnTypes.ACTN_ADD_TODO_SUCCESS,
-      response
-    })
-  );
+      response: normalize(response, schema.todo)
+    });
+  });
 };
 
 export const togggleTodo = id => {
