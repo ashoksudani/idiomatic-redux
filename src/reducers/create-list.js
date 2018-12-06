@@ -10,6 +10,11 @@ const createList = filter => {
         return filter !== 'completed'
           ? [...state, action.response.result]
           : state;
+      case ACTIONS.ACTN_TOGGLE_TODO_SUCCESS:
+        if (filter === 'all') {
+          return state;
+        }
+        return state.filter(id => id !== action.response.result);
       default:
         return state;
     }

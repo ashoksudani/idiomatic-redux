@@ -49,7 +49,7 @@ export const fetchTodos = filter => {
 };
 
 export const addTodo = text => {
-  return delay(1000).then(() => {
+  return delay(500).then(() => {
     const todo = {
       id: nanoid(),
       text: text,
@@ -61,7 +61,7 @@ export const addTodo = text => {
 };
 
 export const toggleTodo = id => {
-  return delay(2000).then(() => {
+  return delay(500).then(() => {
     const todo = fakeDatabase.todos.find(todoItem => todoItem.id === id);
     todo.completed = !todo.completed;
     return todo;

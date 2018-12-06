@@ -1,12 +1,10 @@
-import {
-  ACTN_FETCH_TODOS_SUCCESS,
-  ACTN_ADD_TODO_SUCCESS
-} from 'constants/actions';
+import * as actnTypes from 'constants/actions';
 
 const byId = (state = {}, action = {}) => {
   switch (action.type) {
-    case ACTN_FETCH_TODOS_SUCCESS:
-    case ACTN_ADD_TODO_SUCCESS:
+    case actnTypes.ACTN_FETCH_TODOS_SUCCESS:
+    case actnTypes.ACTN_ADD_TODO_SUCCESS:
+    case actnTypes.ACTN_TOGGLE_TODO_SUCCESS:
       return { ...state, ...action.response.entities.todos };
     default:
       return state;

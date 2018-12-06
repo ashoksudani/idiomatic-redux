@@ -51,11 +51,13 @@ export const addTodo = text => dispatch => {
   });
 };
 
-export const togggleTodo = id => {
-  return {
-    type: actnTypes.ACTN_TOGGLE_TODO,
-    id
-  };
+export const togggleTodo = id => dispatch => {
+  return api.toggleTodo(id).then(response => {
+    dispatch({
+      type: actnTypes.ACTN_TOGGLE_TODO_SUCCESS,
+      response: normalize(response, schema.todo)
+    });
+  });
 };
 
 // export const setVisibilityFilter = filter => {
