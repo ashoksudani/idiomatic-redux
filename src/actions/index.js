@@ -1,5 +1,4 @@
 import * as actnTypes from 'constants/actions';
-import nanoid from 'nanoid';
 
 import * as api from 'api';
 import { getIsFetching } from 'reducers';
@@ -41,12 +40,13 @@ export const fetchTodos = filter => (dispatch, getState) => {
     );
 };
 
-export const addTodo = text => {
-  return {
-    type: actnTypes.ACTN_ADD_TODO,
-    id: nanoid(),
-    text
-  };
+export const addTodo = text => dispatch => {
+  return api.addTodo(text).then(response =>
+    dispatch({
+      type: actnTypes.ACTN_ADD_TODO_SUCCESS,
+      response
+    })
+  );
 };
 
 export const togggleTodo = id => {

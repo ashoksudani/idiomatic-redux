@@ -1,4 +1,7 @@
-import { ACTN_FETCH_TODOS_SUCCESS } from 'constants/actions';
+import {
+  ACTN_FETCH_TODOS_SUCCESS,
+  ACTN_ADD_TODO_SUCCESS
+} from 'constants/actions';
 
 const byId = (state = {}, action = {}) => {
   switch (action.type) {
@@ -8,6 +11,11 @@ const byId = (state = {}, action = {}) => {
         nextState[todo.id] = todo;
       });
       return nextState;
+    case ACTN_ADD_TODO_SUCCESS:
+      return {
+        ...state,
+        [action.response.id]: action.response
+      };
     default:
       return state;
   }

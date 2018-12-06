@@ -31,10 +31,10 @@ const delay = ms =>
   });
 
 export const fetchTodos = filter => {
-  return delay(2000).then(() => {
-    if (Math.random() > 0.5) {
-      throw new Error('Server is not available.');
-    }
+  return delay(500).then(() => {
+    // if (Math.random() > 0.5) {
+    //   throw new Error('Server is not available.');
+    // }
     switch (filter) {
       case 'all':
         return fakeDatabase.todos;
@@ -45,5 +45,25 @@ export const fetchTodos = filter => {
       default:
         throw new Error(`Unknown filter: ${filter}`);
     }
+  });
+};
+
+export const addTodo = text => {
+  return delay(1000).then(() => {
+    const todo = {
+      id: nanoid(),
+      text: text,
+      completed: false
+    };
+    fakeDatabase.todos.push(todo);
+    return todo;
+  });
+};
+
+export const toggleTodo = id => {
+  return delay(2000).then(() => {
+    const todo = fakeDatabase.todos.find(todoItem => todoItem.id === id);
+    todo.completed = !todo.completed;
+    return todo;
   });
 };

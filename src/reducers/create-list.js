@@ -3,12 +3,13 @@ import * as ACTIONS from '../constants/actions';
 
 const createList = filter => {
   const ids = (state = [], action) => {
-    if (action.filter !== filter) {
-      return state;
-    }
     switch (action.type) {
       case ACTIONS.ACTN_FETCH_TODOS_SUCCESS:
-        return action.response.map(todo => todo.id);
+        return action.filter !== filter
+          ? state
+          : action.response.map(todo => todo.id);
+      case ACTIONS.ACTN_ADD_TODO_SUCCESS:
+        return filter !== 'completed' ? [...state, action.response.id] : state;
       default:
         return state;
     }
